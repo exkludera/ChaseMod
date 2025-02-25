@@ -54,6 +54,42 @@ public class CCSMatch
         Marshal.StructureToPtr(marshallMatch, structOffset, true);
     }
 
+    public static void AddTeamScore(CCSGameRules gameRules, CsTeam team, short score = 1)
+    {
+        var structOffset = gameRules.Handle + MATCH_OFFSET;
+
+        var marshallMatch = Marshal.PtrToStructure<MCCSMatch>(structOffset);
+
+        switch (team)
+        {
+            case CsTeam.Terrorist:
+                {
+                    if (marshallMatch.m_terroristScoreSecondHalf > 0)
+                        marshallMatch.m_terroristScoreSecondHalf += score;
+
+                    else marshallMatch.m_terroristScoreFirstHalf += score;
+
+                    marshallMatch.m_terroristScoreTotal += score;
+
+                    break;
+                }
+            case CsTeam.CounterTerrorist:
+                {
+                    if (marshallMatch.m_ctScoreSecondHalf > 0)
+                        marshallMatch.m_ctScoreSecondHalf += score;
+
+                    else marshallMatch.m_ctScoreFirstHalf += score;
+
+                    marshallMatch.m_ctScoreTotal += score;
+
+                    break;
+                }
+        }
+
+        UpdateTeamScores(marshallMatch);
+        Marshal.StructureToPtr(marshallMatch, structOffset, true);
+    }
+
     public static void UpdateTeamScores(MCCSMatch match)
     {
         var teams = Utilities.FindAllEntitiesByDesignerName<CCSTeam>("cs_team_manager");
@@ -84,41 +120,5 @@ public class CCSMatch
             Utilities.SetStateChanged(team, "CCSTeam", "m_scoreSecondHalf");
             Utilities.SetStateChanged(team, "CCSTeam", "m_scoreOvertime");
         }
-    }
-
-    public static void UpdateTeamScore(CCSGameRules gameRules, CsTeam team, short score = 1)
-    {
-        var structOffset = gameRules.Handle + MATCH_OFFSET;
-
-        var marshallMatch = Marshal.PtrToStructure<MCCSMatch>(structOffset);
-
-        switch (team)
-        {
-            case CsTeam.Terrorist:
-            {
-                if (marshallMatch.m_terroristScoreSecondHalf > 0)
-                    marshallMatch.m_terroristScoreSecondHalf += score;
-
-                else marshallMatch.m_terroristScoreFirstHalf += score;
-
-                marshallMatch.m_terroristScoreTotal += score;
-
-                break;
-            }
-            case CsTeam.CounterTerrorist:
-            {
-                if (marshallMatch.m_ctScoreSecondHalf > 0)
-                    marshallMatch.m_ctScoreSecondHalf += score;
-
-                else marshallMatch.m_ctScoreFirstHalf += score;
-
-                marshallMatch.m_ctScoreTotal += score;
-
-                break;
-            }
-        }
-
-        Marshal.StructureToPtr(marshallMatch, structOffset, true);
-        CCSMatch_UpdateTeamScores.Invoke(structOffset);
     }
 }

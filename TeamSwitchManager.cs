@@ -45,9 +45,9 @@ internal class TeamSwitchManager
                 gameRules.RoundEndWinnerTeam = (int)CsTeam.Terrorist;
 
                 if (gameRules.RoundWinReason != 10)
-                    CCSMatch.UpdateTeamScore(gameRules, CsTeam.CounterTerrorist, -1);
+                    CCSMatch.AddTeamScore(gameRules, CsTeam.CounterTerrorist, -1);
 
-                CCSMatch.UpdateTeamScore(gameRules, CsTeam.Terrorist);
+                CCSMatch.AddTeamScore(gameRules, CsTeam.Terrorist);
             }
 
             switch (_lastWinningTeam)
