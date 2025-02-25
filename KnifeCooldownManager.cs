@@ -51,6 +51,11 @@ internal class KnifeCooldownManager
             return HookResult.Continue;
         }
 
+        if (info.DamageFlags.HasFlag(TakeDamageFlags_t.DFLAG_FORCE_DEATH) || info.Inflictor.Value?.DesignerName != "player")
+        {
+            return HookResult.Continue;
+        }
+
         var attacker = info.Attacker.Value.As<CCSPlayerPawn>();
 
         var pawn = entity.As<CCSPlayerPawn>();
