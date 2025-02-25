@@ -104,8 +104,21 @@ internal class KnifeCooldownManager
 
         if (_plugin.Config.KnifeCooldown > 0.0f && pawn.Health - info.Damage > 0.0f)
         {
+            Color color = Color.FromArgb(160, 192, 0, 0);
+
+            var rgba = _plugin.Config.KnifeCooldownRGBA.Split(' ');
+            if (rgba.Length == 4)
+            {
+                int r = int.Parse(rgba[0]);
+                int g = int.Parse(rgba[1]);
+                int b = int.Parse(rgba[2]);
+                int a = int.Parse(rgba[3]);
+
+                color = Color.FromArgb(a, r, g, b);
+            }
+
             var originalColor = pawn.Render;
-            pawn.Render = Color.FromArgb(160, 192, 0, 0);
+            pawn.Render = color;
             Utilities.SetStateChanged(pawn, "CBaseModelEntity", "m_clrRender");
 
             new Timer(_plugin.Config.KnifeCooldown, () =>

@@ -19,6 +19,7 @@ public sealed class ChaseModConfig : BasePluginConfig
     [JsonPropertyName("knifeDamageModify")] public bool KnifeDamageModify { get; set; } = true;
     [JsonPropertyName("knifeDamage")] public int KnifeDamage { get; set; } = 50;
     [JsonPropertyName("knifeCooldown")] public float KnifeCooldown { get; set; } = 2.0f;
+    [JsonPropertyName("knifeCooldownRGBA")] public string KnifeCooldownRGBA { get; set; } = "0 192 0 160";
     [JsonPropertyName("stunThrowTime")] public float StunThrowTime { get; set; } = 2.0f;
     [JsonPropertyName("stunFreezeTime")] public float StunFreezeTime { get; set; } = 15.0f;
     [JsonPropertyName("stunFreezeRadius")] public float StunFreezeRadius { get; set; } = 500f;
