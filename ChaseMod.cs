@@ -49,6 +49,7 @@ public class ChaseMod : BasePlugin, IPluginConfig<ChaseModConfig>
         }
 
         RegisterListener<Listeners.OnTick>(OnTick);
+        RegisterListener<Listeners.OnServerPrecacheResources>(OnServerPrecacheResources);
     }
 
     public override void Unload(bool hotReload)
@@ -76,6 +77,12 @@ public class ChaseMod : BasePlugin, IPluginConfig<ChaseModConfig>
         }
 
         return HookResult.Continue;
+    }
+
+    private void OnServerPrecacheResources(ResourceManifest manifest)
+    {
+        if (Config.FreezeRingParticle.Enabled)
+            manifest.AddResource(Config.FreezeRingParticle.VpcfFile);
     }
 
     private void OnTick()
