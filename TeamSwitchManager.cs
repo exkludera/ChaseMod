@@ -34,7 +34,22 @@ internal class TeamSwitchManager
         {
             _lastWinningTeam = (CsTeam)@event.Winner;
             _shouldSwitchTeams = false;
-            
+
+            var gameRules = ChaseModUtils.GetGameRules();
+            if ((gameRules.RoundEndTimerTime - gameRules.RoundTime) == 0)
+            {
+                _lastWinningTeam = CsTeam.Terrorist;
+
+                gameRules.RoundEndReason = 9;
+                gameRules.RoundWinStatus = (int)CsTeam.Terrorist;
+                gameRules.RoundEndWinnerTeam = (int)CsTeam.Terrorist;
+
+                if (gameRules.RoundWinReason != 10)
+                    CCSMatch.UpdateTeamScore(gameRules, CsTeam.CounterTerrorist, -1);
+
+                CCSMatch.UpdateTeamScore(gameRules, CsTeam.Terrorist);
+            }
+
             switch (_lastWinningTeam)
             {
                 case CsTeam.CounterTerrorist:

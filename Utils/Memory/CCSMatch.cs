@@ -1,5 +1,6 @@
 ﻿using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
+using CounterStrikeSharp.API.Modules.Utils;
 using System.Runtime.InteropServices;
 
 namespace ChaseMod.Utils.Memory;
@@ -57,6 +58,42 @@ public class CCSMatch
         temp = marshallMatch.m_terroristScoreTotal;
         marshallMatch.m_terroristScoreTotal = marshallMatch.m_ctScoreTotal;
         marshallMatch.m_ctScoreTotal = temp;
+
+        Marshal.StructureToPtr(marshallMatch, structOffset, true);
+        CCSMatch_UpdateTeamScores.Invoke(structOffset);
+    }
+
+    public static void UpdateTeamScore(CCSGameRules gameRules, CsTeam team, short score = 1)
+    {
+        var structOffset = gameRules.Handle + MATCH_OFFSET;
+
+        var marshallMatch = Marshal.PtrToStructure<MCCSMatch>(structOffset);
+
+        switch (team)
+        {
+            case CsTeam.Terrorist:
+            {
+                if (marshallMatch.m_terroristScoreSecondHalf > 0)
+                    marshallMatch.m_terroristScoreSecondHalf += score;
+
+                else marshallMatch.m_terroristScoreFirstHalf += score;
+
+                marshallMatch.m_terroristScoreTotal += score;
+
+                break;
+            }
+            case CsTeam.CounterTerrorist:
+            {
+                if (marshallMatch.m_ctScoreSecondHalf > 0)
+                    marshallMatch.m_ctScoreSecondHalf += score;
+
+                else marshallMatch.m_ctScoreFirstHalf += score;
+
+                marshallMatch.m_ctScoreTotal += score;
+
+                break;
+            }
+        }
 
         Marshal.StructureToPtr(marshallMatch, structOffset, true);
         CCSMatch_UpdateTeamScores.Invoke(structOffset);
