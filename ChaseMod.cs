@@ -17,7 +17,7 @@ public class ChaseMod : BasePlugin, IPluginConfig<ChaseModConfig>
 
     public override string ModuleName => "HnS ChaseMod";
     public override string ModuleAuthor => "svn";
-    public override string ModuleVersion => "2.1.3";
+    public override string ModuleVersion => "2.2.1";
 
     public ChaseModConfig Config { get; set; } = new();
     public void OnConfigParsed(ChaseModConfig config) { Config = config; }
@@ -125,7 +125,7 @@ public class ChaseMod : BasePlugin, IPluginConfig<ChaseModConfig>
                     }
                 }
 
-                if (weapon.DesignerName == "weapon_knife")
+                if (Config.EnableKnifeDisabling && weapon.DesignerName == "weapon_knife")
                 {
                     if (controller.Team == CsTeam.CounterTerrorist)
                     {
